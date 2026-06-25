@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EFYA PAPABI - Admin Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/admin.css" />
+    <link rel="stylesheet" href="css/animations.css" />
+    <style>
+        /* Admin Login Styles */
+        .admin-login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--primary-gradient);
+            padding: var(--spacing-4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .admin-login-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.05) 0%, transparent 70%);
+            animation: heroRotate 30s linear infinite;
+        }
+
+        .admin-login-box {
+            background: var(--white);
+            border-radius: var(--radius-2xl);
+            padding: var(--spacing-12) var(--spacing-8);
+            max-width: 440px;
+            width: 100%;
+            box-shadow: var(--shadow-2xl);
+            position: relative;
+            z-index: 2;
+            animation: fadeInUp 0.6s ease;
+        }
+
+        .admin-login-box .login-header {
+            text-align: center;
+            margin-bottom: var(--spacing-8);
+        }
+
+        .admin-login-box .login-header .logo-icon {
+            width: 72px;
+            height: 72px;
+            background: var(--gold-gradient);
+            border-radius: var(--radius-xl);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto var(--spacing-4);
+            font-size: var(--text-3xl);
+            font-weight: var(--font-black);
+            color: var(--white);
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.3);
+        }
+
+        .admin-login-box .login-header h1 {
+            font-size: var(--text-2xl);
+            font-weight: var(--font-bold);
+            color: var(--gray-900);
+        }
+
+        .admin-login-box .login-header h1 span {
+            color: var(--gold);
+        }
+
+        .admin-login-box .login-header p {
+            color: var(--gray-500);
+            font-size: var(--text-sm);
+            margin-top: var(--spacing-1);
+        }
+
+        .admin-login-box .form-group {
+            margin-bottom: var(--spacing-4);
+        }
+
+        .admin-login-box .form-group label {
+            display: block;
+            font-weight: var(--font-medium);
+            font-size: var(--text-sm);
+            color: var(--gray-700);
+            margin-bottom: var(--spacing-1);
+        }
+
+        .admin-login-box .form-group .input-wrapper {
+            position: relative;
+        }
+
+        .admin-login-box .form-group .input-wrapper i {
+            position: absolute;
+            left: var(--spacing-3);
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-400);
+            font-size: var(--text-base);
+        }
+
+        .admin-login-box .form-group input {
+            width: 100%;
+            padding: var(--spacing-3) var(--spacing-4) var(--spacing-3) var(--spacing-10);
+            border: 2px solid var(--gray-200);
+            border-radius: var(--radius-base);
+            font-size: var(--text-base);
+            transition: var(--transition-base);
+            font-family: var(--font-primary);
+        }
+
+        .admin-login-box .form-group input:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(15, 52, 96, 0.1);
+        }
+
+        .admin-login-box .form-group input.error {
+            border-color: var(--error);
+        }
+
+        .admin-login-box .form-group input.error:focus {
+            box-shadow: 0 0 0 4px rgba(220, 53, 69, 0.1);
+        }
+
+        .admin-login-box .form-group .toggle-password {
+            position: absolute;
+            right: var(--spacing-3);
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--gray-400);
+            cursor: pointer;
+            transition: var(--transition-base);
+            padding: var(--spacing-1);
+        }
+
+        .admin-login-box .form-group .toggle-password:hover {
+            color: var(--gray-600);
+        }
+
+        .admin-login-box .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-4);
+            font-size: var(--text-sm);
+        }
+
+        .admin-login-box .form-options .remember-me {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-2);
+            cursor: pointer;
+            color: var(--gray-600);
+        }
+
+        .admin-login-box .form-options .remember-me input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            accent-color: var(--primary);
+            cursor: pointer;
+        }
+
+        .admin-login-box .form-options .forgot-link {
+            color: var(--primary);
+            text-decoration: none;
+            transition: var(--transition-base);
+        }
+
+        .admin-login-box .form-options .forgot-link:hover {
+            color: var(--gold);
+        }
+
+        .admin-login-box .btn-login {
+            width: 100%;
+            padding: var(--spacing-3);
+            background: var(--gold-gradient);
+            color: var(--white);
+            border: none;
+            border-radius: var(--radius-base);
+            font-size: var(--text-base);
+            font-weight: var(--font-semibold);
+            cursor: pointer;
+            transition: var(--transition-base);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-2);
+            min-height: 52px;
+        }
+
+        .admin-login-box .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.4);
+        }
+
+        .admin-login-box .btn-login:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .admin-login-box .btn-login .spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top-color: var(--white);
+            border-radius: var(--radius-full);
+            animation: spinnerRotate 0.8s linear infinite;
+        }
+
+        .admin-login-box .btn-login.loading .spinner {
+            display: inline-block;
+        }
+
+        .admin-login-box .btn-login.loading .btn-text {
+            display: none;
+        }
+
+        .admin-login-box .error-message {
+            display: none;
+            background: var(--error-light);
+            color: var(--error);
+            padding: var(--spacing-3);
+            border-radius: var(--radius-base);
+            font-size: var(--text-sm);
+            margin-top: var(--spacing-3);
+            border: 1px solid var(--error);
+            align-items: center;
+            gap: var(--spacing-2);
+        }
+
+        .admin-login-box .error-message.visible {
+            display: flex;
+        }
+
+        .admin-login-box .login-footer {
+            text-align: center;
+            margin-top: var(--spacing-6);
+            padding-top: var(--spacing-4);
+            border-top: 1px solid var(--gray-200);
+        }
+
+        .admin-login-box .login-footer p {
+            font-size: var(--text-sm);
+            color: var(--gray-500);
+            margin-bottom: 0;
+        }
+
+        .admin-login-box .login-footer .back-to-site {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-2);
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: var(--font-medium);
+            transition: var(--transition-base);
+            margin-top: var(--spacing-2);
+        }
+
+        .admin-login-box .login-footer .back-to-site:hover {
+            color: var(--gold);
+        }
+
+        /* Login Attempts Warning */
+        .login-attempts-warning {
+            background: var(--warning-light);
+            border: 1px solid var(--warning);
+            color: #856404;
+            padding: var(--spacing-3);
+            border-radius: var(--radius-base);
+            font-size: var(--text-sm);
+            margin-bottom: var(--spacing-4);
+            display: none;
+            align-items: center;
+            gap: var(--spacing-2);
+        }
+
+        .login-attempts-warning.visible {
+            display: flex;
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .admin-login-box {
+                padding: var(--spacing-8) var(--spacing-4);
+            }
+
+            .admin-login-box .login-header h1 {
+                font-size: var(--text-xl);
+            }
+
+            .admin-login-box .form-options {
+                flex-direction: column;
+                gap: var(--spacing-2);
+                align-items: flex-start;
+            }
+        }
+
+        /* Dark Mode Support */
+        .dark-mode .admin-login-box {
+            background: #1a1a2e;
+            color: var(--white);
+        }
+
+        .dark-mode .admin-login-box .login-header h1 {
+            color: var(--white);
+        }
+
+        .dark-mode .admin-login-box .form-group input {
+            background: #2a2a3e;
+            border-color: #333;
+            color: var(--white);
+        }
+
+        .dark-mode .admin-login-box .form-group input:focus {
+            border-color: var(--gold);
+        }
+
+        .dark-mode .admin-login-box .login-footer {
+            border-top-color: #333;
+        }
+
+        .dark-mode .admin-login-box .form-options .remember-me {
+            color: var(--gray-400);
+        }
+    </style>
+</head>
+<body>
+    <!-- Admin Login Page -->
+    <div class="admin-login-container" id="loginContainer">
+        <div class="admin-login-box">
+            <div class="login-header">
+                <div class="logo-icon">E</div>
+                <h1>EFYA <span>PAPABI</span></h1>
+                <p>Admin Dashboard Login</p>
+            </div>
+
+            <!-- Login Attempts Warning -->
+            <div class="login-attempts-warning" id="attemptsWarning">
+                <i class="fas fa-exclamation-triangle"></i>
+                <span id="attemptsMessage">Too many failed attempts. Please wait 5 minutes.</span>
+            </div>
+
+            <form id="adminLoginForm" onsubmit="handleAdminLogin(event)">
+                <div class="form-group">
+                    <label for="adminEmail">Email Address</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-envelope"></i>
+                        <input 
+                            type="email" 
+                            id="adminEmail" 
+                            placeholder="admin@efyapapabi.com" 
+                            required 
+                            autocomplete="username"
+                            value="admin@efyapapabi.com"
+                        />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="adminPassword">Password</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-lock"></i>
+                        <input 
+                            type="password" 
+                            id="adminPassword" 
+                            placeholder="Enter your password" 
+                            required 
+                            autocomplete="current-password"
+                        />
+                        <button type="button" class="toggle-password" onclick="togglePasswordVisibility()">
+                            <i class="fas fa-eye" id="passwordToggleIcon"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-options">
+                    <label class="remember-me">
+                        <input type="checkbox" id="rememberMe" />
+                        Remember me
+                    </label>
+                    <a href="#" class="forgot-link" onclick="showForgotPassword(event)">Forgot password?</a>
+                </div>
+
+                <button type="submit" class="btn-login" id="loginBtn">
+                    <span class="spinner"></span>
+                    <span class="btn-text"><i class="fas fa-sign-in-alt"></i> Sign In</span>
+                </button>
+
+                <div class="error-message" id="loginError">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span id="errorText">Invalid credentials. Please try again.</span>
+                </div>
+            </form>
+
+            <div class="login-footer">
+                <p>Protected Admin Area</p>
+                <a href="index.html" class="back-to-site">
+                    <i class="fas fa-arrow-left"></i> Back to Website
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Forgot Password Modal -->
+    <div class="modal-overlay" id="forgotPasswordModal">
+        <div class="modal modal-sm">
+            <div class="modal-header">
+                <h3>Reset Password</h3>
+                <button class="close-btn" onclick="closeForgotPassword()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p style="color: var(--gray-600); margin-bottom: var(--spacing-4);">
+                    Enter your email address and we'll send you a link to reset your password.
+                </p>
+                <div class="form-group">
+                    <label for="resetEmail">Email Address</label>
+                    <input type="email" id="resetEmail" placeholder="admin@efyapapabi.com" />
+                </div>
+                <button class="btn btn-primary" onclick="sendResetLink()" style="width:100%;">
+                    <i class="fas fa-paper-plane"></i> Send Reset Link
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // ADMIN AUTHENTICATION SYSTEM
+        // ============================================
+
+        // Configuration
+        const ADMIN_CONFIG = {
+            // Default admin credentials (change these!)
+            DEFAULT_EMAIL: 'admin@efyapapabi.com',
+            DEFAULT_PASSWORD: 'Admin@2026',
+            
+            // Security settings
+            MAX_LOGIN_ATTEMPTS: 5,
+            LOCKOUT_DURATION: 5 * 60 * 1000, // 5 minutes
+            SESSION_DURATION: 24 * 60 * 60 * 1000, // 24 hours
+        };
+
+        // ============================================
+        // PASSWORD MANAGEMENT
+        // ============================================
+
+        // Get stored admin credentials
+        function getAdminCredentials() {
+            const stored = localStorage.getItem('efya_admin_credentials');
+            if (stored) {
+                try {
+                    return JSON.parse(stored);
+                } catch (e) {
+                    console.error('Error parsing credentials:', e);
+                }
+            }
+            // Initialize with default credentials
+            const credentials = {
+                email: ADMIN_CONFIG.DEFAULT_EMAIL,
+                password: ADMIN_CONFIG.DEFAULT_PASSWORD,
+                lastUpdated: Date.now()
+            };
+            localStorage.setItem('efya_admin_credentials', JSON.stringify(credentials));
+            return credentials;
+        }
+
+        // Update admin password
+        function updateAdminPassword(newPassword) {
+            const credentials = getAdminCredentials();
+            credentials.password = newPassword;
+            credentials.lastUpdated = Date.now();
+            localStorage.setItem('efya_admin_credentials', JSON.stringify(credentials));
+            return credentials;
+        }
+
+        // Update admin email
+        function updateAdminEmail(newEmail) {
+            const credentials = getAdminCredentials();
+            credentials.email = newEmail;
+            credentials.lastUpdated = Date.now();
+            localStorage.setItem('efya_admin_credentials', JSON.stringify(credentials));
+            return credentials;
+        }
+
+        // ============================================
+        // LOGIN ATTEMPTS TRACKING
+        // ============================================
+
+        function getLoginAttempts() {
+            const data = localStorage.getItem('efya_login_attempts');
+            if (data) {
+                try {
+                    return JSON.parse(data);
+                } catch (e) {
+                    console.error('Error parsing login attempts:', e);
+                }
+            }
+            return { count: 0, timestamp: Date.now(), locked: false };
+        }
+
+        function saveLoginAttempts(data) {
+            localStorage.setItem('efya_login_attempts', JSON.stringify(data));
+        }
+
+        function resetLoginAttempts() {
+            saveLoginAttempts({ count: 0, timestamp: Date.now(), locked: false });
+        }
+
+        function incrementLoginAttempts() {
+            const attempts = getLoginAttempts();
+            const now = Date.now();
+            
+            // Reset if more than 30 minutes passed
+            if (now - attempts.timestamp > 30 * 60 * 1000) {
+                attempts.count = 1;
+                attempts.timestamp = now;
+                attempts.locked = false;
+            } else {
+                attempts.count++;
+                attempts.timestamp = now;
+                
+                // Lock after max attempts
+                if (attempts.count >= ADMIN_CONFIG.MAX_LOGIN_ATTEMPTS) {
+                    attempts.locked = true;
+                    attempts.lockTime = now;
+                }
+            }
+            
+            saveLoginAttempts(attempts);
+            return attempts;
+        }
+
+        function isAccountLocked() {
+            const attempts = getLoginAttempts();
+            if (!attempts.locked) return false;
+            
+            const now = Date.now();
+            const lockDuration = ADMIN_CONFIG.LOCKOUT_DURATION;
+            
+            // Check if lock has expired
+            if (now - attempts.lockTime > lockDuration) {
+                resetLoginAttempts();
+                return false;
+            }
+            
+            return true;
+        }
+
+        function getRemainingLockTime() {
+            const attempts = getLoginAttempts();
+            if (!attempts.locked) return 0;
+            
+            const now = Date.now();
+            const elapsed = now - attempts.lockTime;
+            const remaining = ADMIN_CONFIG.LOCKOUT_DURATION - elapsed;
+            return Math.max(0, remaining);
+        }
+
+        // ============================================
+        // SESSION MANAGEMENT
+        // ============================================
+
+        function createSession() {
+            const session = {
+                token: 'admin_session_' + Date.now(),
+                created: Date.now(),
+                expires: Date.now() + ADMIN_CONFIG.SESSION_DURATION,
+                email: getAdminCredentials().email
+            };
+            localStorage.setItem('efya_admin_session', JSON.stringify(session));
+            return session;
+        }
+
+        function getSession() {
+            const data = localStorage.getItem('efya_admin_session');
+            if (data) {
+                try {
+                    return JSON.parse(data);
+                } catch (e) {
+                    console.error('Error parsing session:', e);
+                }
+            }
+            return null;
+        }
+
+        function isSessionValid() {
+            const session = getSession();
+            if (!session) return false;
+            
+            // Check if session has expired
+            if (Date.now() > session.expires) {
+                clearSession();
+                return false;
+            }
+            
+            return true;
+        }
+
+        function clearSession() {
+            localStorage.removeItem('efya_admin_session');
+        }
+
+        function extendSession() {
+            const session = getSession();
+            if (session) {
+                session.expires = Date.now() + ADMIN_CONFIG.SESSION_DURATION;
+                localStorage.setItem('efya_admin_session', JSON.stringify(session));
+                return session;
+            }
+            return null;
+        }
+
+        // ============================================
+        // LOGIN FUNCTIONS
+        // ============================================
+
+        function handleAdminLogin(event) {
+            event.preventDefault();
+            
+            // Check if account is locked
+            if (isAccountLocked()) {
+                const remaining = getRemainingLockTime();
+                const minutes = Math.ceil(remaining / 60000);
+                showError(`Account locked. Please wait ${minutes} minute(s).`);
+                return;
+            }
+            
+            const emailInput = document.getElementById('adminEmail');
+            const passwordInput = document.getElementById('adminPassword');
+            const loginBtn = document.getElementById('loginBtn');
+            const errorDiv = document.getElementById('loginError');
+            
+            const email = emailInput.value.trim();
+            const password = passwordInput.value;
+            
+            // Validate inputs
+            if (!email || !password) {
+                showError('Please enter both email and password.');
+                return;
+            }
+            
+            // Show loading state
+            loginBtn.classList.add('loading');
+            loginBtn.disabled = true;
+            errorDiv.classList.remove('visible');
+            
+            // Simulate API call (actual validation)
+            setTimeout(() => {
+                const credentials = getAdminCredentials();
+                
+                // Check credentials
+                if (email === credentials.email && password === credentials.password) {
+                    // Login successful
+                    resetLoginAttempts();
+                    
+                    // Create session
+                    const session = createSession();
+                    
+                    // Remember me
+                    if (document.getElementById('rememberMe').checked) {
+                        localStorage.setItem('efya_remember_me', 'true');
+                    } else {
+                        localStorage.removeItem('efya_remember_me');
+                    }
+                    
+                    // Redirect to admin dashboard
+                    window.location.href = 'admin-dashboard.html';
+                } else {
+                    // Login failed
+                    const attempts = incrementLoginAttempts();
+                    const remaining = ADMIN_CONFIG.MAX_LOGIN_ATTEMPTS - attempts.count;
+                    
+                    loginBtn.classList.remove('loading');
+                    loginBtn.disabled = false;
+                    
+                    if (attempts.locked) {
+                        showError(`Account locked due to too many failed attempts. Please wait 5 minutes.`);
+                        showAttemptsWarning(true);
+                    } else {
+                        showError(`Invalid credentials. ${remaining} attempt(s) remaining.`);
+                        if (remaining <= 2) {
+                            showAttemptsWarning(true, remaining);
+                        }
+                    }
+                    
+                    // Shake the form
+                    document.querySelector('.admin-login-box').classList.add('animate-shake');
+                    setTimeout(() => {
+                        document.querySelector('.admin-login-box').classList.remove('animate-shake');
+                    }, 500);
+                }
+            }, 800);
+        }
+
+        function showError(message) {
+            const errorDiv = document.getElementById('loginError');
+            const errorText = document.getElementById('errorText');
+            errorText.textContent = message;
+            errorDiv.classList.add('visible');
+            
+            // Auto-hide after 5 seconds
+            setTimeout(() => {
+                errorDiv.classList.remove('visible');
+            }, 5000);
+        }
+
+        function showAttemptsWarning(show, remaining = 0) {
+            const warning = document.getElementById('attemptsWarning');
+            const message = document.getElementById('attemptsMessage');
+            
+            if (show) {
+                if (remaining > 0) {
+                    message.textContent = `Warning: ${remaining} login attempt(s) remaining before account lock.`;
+                } else {
+                    message.textContent = 'Too many failed attempts. Please wait 5 minutes.';
+                }
+                warning.classList.add('visible');
+            } else {
+                warning.classList.remove('visible');
+            }
+        }
+
+        // ============================================
+        // PASSWORD VISIBILITY TOGGLE
+        // ============================================
+
+        function togglePasswordVisibility() {
+            const passwordInput = document.getElementById('adminPassword');
+            const icon = document.getElementById('passwordToggleIcon');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.className = 'fas fa-eye-slash';
+            } else {
+                passwordInput.type = 'password';
+                icon.className = 'fas fa-eye';
+            }
+        }
+
+        // ============================================
+        // FORGOT PASSWORD
+        // ============================================
+
+        function showForgotPassword(event) {
+            event.preventDefault();
+            document.getElementById('forgotPasswordModal').classList.add('active');
+        }
+
+        function closeForgotPassword() {
+            document.getElementById('forgotPasswordModal').classList.remove('active');
+        }
+
+        function sendResetLink() {
+            const email = document.getElementById('resetEmail').value.trim();
+            const credentials = getAdminCredentials();
+            
+            if (!email) {
+                alert('Please enter your email address.');
+                return;
+            }
+            
+            if (email !== credentials.email) {
+                alert('Email address not found. Please enter the registered admin email.');
+                return;
+            }
+            
+            // In a real application, this would send an email
+            // For demo, we'll show a success message
+            alert(`Password reset link sent to ${email}\n\nDefault password: ${credentials.password}\n\n(For demo purposes, your password is displayed here. In production, an email would be sent.)`);
+            
+            closeForgotPassword();
+        }
+
+        // ============================================
+        // AUTO-LOGIN CHECK
+        // ============================================
+
+        function checkAutoLogin() {
+            // Check if already on admin dashboard
+            if (window.location.pathname.includes('admin-dashboard.html')) {
+                if (!isSessionValid()) {
+                    window.location.href = 'admin.html';
+                }
+                return;
+            }
+            
+            // Check if session exists and is valid
+            if (isSessionValid()) {
+                // Redirect to admin dashboard
+                window.location.href = 'admin-dashboard.html';
+                return;
+            }
+            
+            // Check remember me
+            if (localStorage.getItem('efya_remember_me') === 'true') {
+                // Auto-fill email
+                const credentials = getAdminCredentials();
+                document.getElementById('adminEmail').value = credentials.email;
+                document.getElementById('rememberMe').checked = true;
+            }
+        }
+
+        // ============================================
+        // KEYBOARD SHORTCUTS
+        // ============================================
+
+        document.addEventListener('keydown', function(e) {
+            // Ctrl + Shift + L to clear attempts (for testing)
+            if (e.ctrlKey && e.shiftKey && e.key === 'L') {
+                resetLoginAttempts();
+                document.getElementById('attemptsWarning').classList.remove('visible');
+                alert('Login attempts reset.');
+                e.preventDefault();
+            }
+        });
+
+        // ============================================
+        // INITIALIZATION
+        // ============================================
+
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAutoLogin();
+            
+            // Show attempt warning if locked
+            if (isAccountLocked()) {
+                const remaining = getRemainingLockTime();
+                const minutes = Math.ceil(remaining / 60000);
+                showAttemptsWarning(true);
+                document.getElementById('attemptsMessage').textContent = 
+                    `Account locked. Please wait ${minutes} minute(s) before trying again.`;
+            }
+            
+            // Focus on email input
+            document.getElementById('adminEmail').focus();
+        });
+
+        // Close modal on overlay click
+        document.getElementById('forgotPasswordModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeForgotPassword();
+            }
+        });
+
+        // ============================================
+        // EXPOSE FUNCTIONS GLOBALLY
+        // ============================================
+
+        window.handleAdminLogin = handleAdminLogin;
+        window.togglePasswordVisibility = togglePasswordVisibility;
+        window.showForgotPassword = showForgotPassword;
+        window.closeForgotPassword = closeForgotPassword;
+        window.sendResetLink = sendResetLink;
+    </script>
+</body>
+</html>

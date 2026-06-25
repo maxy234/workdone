@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EFYA PAPABI - Checkout</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/animations.css" />
+    <style>
+        .checkout-page {
+            padding: 60px 0;
+        }
+        .checkout-page h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        .checkout-page .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+        }
+        .checkout-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+        .checkout-form {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+        }
+        .checkout-form .form-group {
+            margin-bottom: 20px;
+        }
+        .checkout-form label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        .checkout-form input,
+        .checkout-form textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #eee;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        .checkout-form input:focus,
+        .checkout-form textarea:focus {
+            border-color: #0f3460;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(15, 52, 96, 0.1);
+        }
+        .checkout-form textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        .checkout-form .btn-submit {
+            width: 100%;
+            padding: 15px;
+            background: #0f3460;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .checkout-form .btn-submit:hover {
+            background: #1a1a2e;
+            transform: scale(1.02);
+        }
+        .order-summary {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            height: fit-content;
+        }
+        .order-summary h3 {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        .order-summary .item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            color: #666;
+        }
+        .order-summary .total {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #0f3460;
+            border-top: 2px solid #f0f0f0;
+            padding-top: 15px;
+            margin-top: 10px;
+        }
+        @media (max-width: 992px) {
+            .checkout-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navigation -->
+<nav class="navbar">
+    <div class="container">
+        <div class="nav-container">
+            <div class="logo">
+                <h2>EFYA PAPABI</h2>
+                <span>COLLECTIONS</span>
+            </div>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="shop.html">Shop</a>
+                <a href="about.html">About</a>
+                <a href="contact.html">Contact</a>
+                <a href="cart.html" class="cart-link">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count">0</span>
+                </a>
+                <a href="admin.html"><i class="fas fa-user-cog"></i></a>
+            </div>
+            <div class="hamburger" onclick="toggleMobileMenu()">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- Checkout -->
+<section class="checkout-page">
+    <div class="container">
+        <h1>Checkout</h1>
+        <p class="subtitle">Fill in your details to complete your order</p>
+        <div class="checkout-grid">
+            <div class="checkout-form">
+                <form id="checkoutForm" onsubmit="handleCheckout(event)">
+                    <div class="form-group">
+                        <label>Full Name *</label>
+                        <input type="text" id="fullName" placeholder="Enter your full name" required />
+                    </div>
+                    <div class="form-group">
+                        <label>Phone Number *</label>
+                        <input type="tel" id="phoneNumber" placeholder="0240000000" required />
+                    </div>
+                    <div class="form-group">
+                        <label>Delivery Location *</label>
+                        <input type="text" id="deliveryLocation" placeholder="Accra - Madina, House No." required />
+                    </div>
+                    <div class="form-group">
+                        <label>Additional Notes</label>
+                        <textarea id="additionalNotes" placeholder="Any special instructions..."></textarea>
+                    </div>
+                    <button type="submit" class="btn-submit"><i class="fas fa-paper-plane"></i> Place Order</button>
+                </form>
+            </div>
+            <div class="order-summary" id="orderSummary">
+                <!-- Rendered from JS -->
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer style="background: #0f0f1a; color: #fff; padding: 40px 0 20px; margin-top: 40px;">
+    <div class="container">
+        <div style="text-align: center; color: #666;">
+            <p>&copy; 2026 EFYA PAPABI COLLECTIONS. All rights reserved.</p>
+        </div>
+    </div>
+</footer>
+
+<script src="js/app.js"></script>
+<script src="js/products.js"></script>
+<script src="js/cart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        updateCartCount();
+        renderOrderSummary();
+    });
+    
+    function renderOrderSummary() {
+        const cart = getCart();
+        const products = getProducts();
+        const container = document.getElementById('orderSummary');
+        
+        if (cart.length === 0) {
+            container.innerHTML = `
+                <h3>Your Cart is Empty</h3>
+                <p style="color:#999;">Add items to proceed</p>
+                <a href="shop.html" class="btn" style="display:block;text-align:center;margin-top:15px;">Shop Now</a>
+            `;
+            return;
+        }
+        
+        let subtotal = 0;
+        let itemsHtml = cart.map(item => {
+            const product = products.find(p => p.id === item.id);
+            if (!product) return '';
+            const itemTotal = product.price * item.quantity;
+            subtotal += itemTotal;
+            return `<div class="item"><span>${product.name} x${item.quantity}</span><span>GH₵${itemTotal}</span></div>`;
+        }).join('');
+        
+        const delivery = subtotal > 0 ? 20 : 0;
+        const total = subtotal + delivery;
+        
+        container.innerHTML = `
+            <h3>Order Summary</h3>
+            ${itemsHtml}
+            <div class="item"><span>Delivery</span><span>GH₵${delivery}</span></div>
+            <div class="total"><span>Total</span><span>GH₵${total}</span></div>
+        `;
+    }
+    
+    function handleCheckout(event) {
+        event.preventDefault();
+        const cart = getCart();
+        if (cart.length === 0) {
+            showToast('Your cart is empty', 'error');
+            return;
+        }
+        
+        const name = document.getElementById('fullName').value.trim();
+        const phone = document.getElementById('phoneNumber').value.trim();
+        const location = document.getElementById('deliveryLocation').value.trim();
+        const notes = document.getElementById('additionalNotes').value.trim();
+        
+        if (!name || !phone || !location) {
+            showToast('Please fill in all required fields', 'error');
+            return;
+        }
+        
+        // Create order
+        const order = {
+            id: 'EFYA-' + Date.now(),
+            customer: name,
+            phone: phone,
+            location: location,
+            notes: notes,
+            items: cart,
+            total: calculateTotal(cart),
+            date: new Date().toLocaleString(),
+            status: 'Pending'
+        };
+        
+        // Save order
+        saveOrder(order);
+        
+        // Send to WhatsApp
+        sendOrderToWhatsApp(order);
+        
+        // Clear cart
+        saveCart([]);
+        updateCartCount();
+        
+        showToast('Order placed successfully!', 'success');
+        setTimeout(() => {
+            window.location.href = 'index.html';
+        }, 2000);
+    }
+    
+    function calculateTotal(cart) {
+        const products = getProducts();
+        let total = 0;
+        cart.forEach(item => {
+            const product = products.find(p => p.id === item.id);
+            if (product) total += product.price * item.quantity;
+        });
+        return total + 20; // delivery fee
+    }
+    
+    function saveOrder(order) {
+        let orders = JSON.parse(localStorage.getItem('efya_orders') || '[]');
+        orders.unshift(order);
+        localStorage.setItem('efya_orders', JSON.stringify(orders));
+    }
+    
+    function sendOrderToWhatsApp(order) {
+        const products = getProducts();
+        let message = 'EFYA PAPABI COLLECTIONS ORDER\n\n';
+        message += `Order Number: ${order.id}\n`;
+        message += `Customer Name: ${order.customer}\n`;
+        message += `Phone: ${order.phone}\n`;
+        message += `Location: ${order.location}\n`;
+        if (order.notes) message += `Notes: ${order.notes}\n`;
+        message += '\nItems Ordered:\n';
+        order.items.forEach((item, index) => {
+            const product = products.find(p => p.id === item.id);
+            if (product) {
+                message += `${index+1}. ${product.name}\n`;
+                message += `   Code: ${product.code}\n`;
+                message += `   Qty: ${item.quantity}\n`;
+                message += `   Price: GH₵${product.price}\n`;
+                message += `   Size: ${item.size || 'M'} | Color: ${item.color || 'Black'}\n\n`;
+            }
+        });
+        message += `Total: GH₵${order.total}`;
+        
+        const encoded = encodeURIComponent(message);
+        window.open(`https://wa.me/233544527889?text=${encoded}`, '_blank');
+    }
+    
+    function toggleMobileMenu() {
+        document.querySelector('.nav-links').classList.toggle('active');
+    }
+    
+    function showToast(message, type = 'success') {
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        toast.textContent = message;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.classList.add('show'), 100);
+        setTimeout(() => {
+            toast.classList.remove('show');
+            setTimeout(() => toast.remove(), 500);
+        }, 3000);
+    }
+</script>
+</body>
+</html>

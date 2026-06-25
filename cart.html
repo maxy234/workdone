@@ -1,0 +1,1372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EFYA PAPABI - Shopping Cart</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/animations.css" />
+    <style>
+        /* Cart Page Styles */
+        .cart-page {
+            padding: var(--spacing-8) 0;
+            background: var(--off-white);
+            min-height: 80vh;
+        }
+
+        .cart-page .page-header {
+            margin-bottom: var(--spacing-6);
+        }
+
+        .cart-page .page-header h1 {
+            font-size: var(--text-3xl);
+            font-weight: var(--font-bold);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-3);
+        }
+
+        .cart-page .page-header h1 i {
+            color: var(--gold);
+        }
+
+        .cart-page .page-header .subtitle {
+            color: var(--gray-500);
+            font-size: var(--text-base);
+            margin-top: var(--spacing-1);
+        }
+
+        .cart-layout {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: var(--spacing-6);
+        }
+
+        /* Cart Items */
+        .cart-items-container {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-6);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .cart-items-container .cart-header {
+            display: grid;
+            grid-template-columns: 3fr 1fr 1fr 1fr;
+            padding: var(--spacing-3) var(--spacing-4);
+            background: var(--gray-100);
+            border-radius: var(--radius-base);
+            font-weight: var(--font-semibold);
+            font-size: var(--text-sm);
+            color: var(--gray-600);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: var(--spacing-4);
+        }
+
+        .cart-item {
+            display: grid;
+            grid-template-columns: 3fr 1fr 1fr 1fr;
+            align-items: center;
+            padding: var(--spacing-4);
+            border-bottom: 1px solid var(--gray-200);
+            transition: var(--transition-base);
+            gap: var(--spacing-3);
+        }
+
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+
+        .cart-item:hover {
+            background: var(--gray-100);
+            border-radius: var(--radius-base);
+        }
+
+        .cart-item .product-info {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-4);
+        }
+
+        .cart-item .product-info .product-image {
+            width: 80px;
+            height: 80px;
+            border-radius: var(--radius-base);
+            object-fit: cover;
+            flex-shrink: 0;
+            background: var(--gray-100);
+        }
+
+        .cart-item .product-info .product-details {
+            flex: 1;
+        }
+
+        .cart-item .product-info .product-details .product-name {
+            font-weight: var(--font-semibold);
+            font-size: var(--text-base);
+            color: var(--gray-900);
+            margin-bottom: var(--spacing-1);
+        }
+
+        .cart-item .product-info .product-details .product-code {
+            font-size: var(--text-sm);
+            color: var(--gray-500);
+        }
+
+        .cart-item .product-info .product-details .product-variants {
+            display: flex;
+            gap: var(--spacing-3);
+            margin-top: var(--spacing-1);
+            font-size: var(--text-sm);
+            color: var(--gray-600);
+        }
+
+        .cart-item .product-info .product-details .product-variants span {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-1);
+        }
+
+        .cart-item .product-price {
+            font-weight: var(--font-semibold);
+            color: var(--gray-900);
+        }
+
+        .cart-item .quantity-control {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-2);
+        }
+
+        .cart-item .quantity-control button {
+            width: 32px;
+            height: 32px;
+            border: 2px solid var(--gray-200);
+            border-radius: var(--radius-full);
+            background: var(--white);
+            color: var(--gray-700);
+            font-size: var(--text-sm);
+            cursor: pointer;
+            transition: var(--transition-base);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cart-item .quantity-control button:hover {
+            background: var(--primary);
+            color: var(--white);
+            border-color: var(--primary);
+        }
+
+        .cart-item .quantity-control button:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .cart-item .quantity-control .quantity {
+            font-weight: var(--font-semibold);
+            min-width: 30px;
+            text-align: center;
+            font-size: var(--text-base);
+        }
+
+        .cart-item .item-total {
+            font-weight: var(--font-bold);
+            color: var(--primary);
+            font-size: var(--text-base);
+        }
+
+        .cart-item .remove-btn {
+            background: none;
+            border: none;
+            color: var(--gray-400);
+            cursor: pointer;
+            transition: var(--transition-base);
+            font-size: var(--text-lg);
+            padding: var(--spacing-1);
+        }
+
+        .cart-item .remove-btn:hover {
+            color: var(--error);
+            transform: scale(1.2);
+        }
+
+        /* Empty Cart */
+        .empty-cart {
+            text-align: center;
+            padding: var(--spacing-12) var(--spacing-4);
+        }
+
+        .empty-cart .empty-icon {
+            font-size: 5rem;
+            color: var(--gray-300);
+            margin-bottom: var(--spacing-4);
+        }
+
+        .empty-cart h3 {
+            font-size: var(--text-2xl);
+            font-weight: var(--font-bold);
+            margin-bottom: var(--spacing-2);
+        }
+
+        .empty-cart p {
+            color: var(--gray-500);
+            margin-bottom: var(--spacing-6);
+        }
+
+        .empty-cart .btn {
+            padding: var(--spacing-3) var(--spacing-8);
+        }
+
+        /* Cart Summary */
+        .cart-summary {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-6);
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 100px;
+            height: fit-content;
+        }
+
+        .cart-summary h3 {
+            font-size: var(--text-xl);
+            font-weight: var(--font-bold);
+            margin-bottom: var(--spacing-4);
+            padding-bottom: var(--spacing-3);
+            border-bottom: 2px solid var(--gray-200);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-2);
+        }
+
+        .cart-summary h3 i {
+            color: var(--gold);
+        }
+
+        .cart-summary .summary-row {
+            display: flex;
+            justify-content: space-between;
+            padding: var(--spacing-2) 0;
+            color: var(--gray-600);
+            font-size: var(--text-sm);
+        }
+
+        .cart-summary .summary-row.total {
+            font-size: var(--text-lg);
+            font-weight: var(--font-bold);
+            color: var(--gray-900);
+            border-top: 2px solid var(--gray-200);
+            padding-top: var(--spacing-3);
+            margin-top: var(--spacing-2);
+        }
+
+        .cart-summary .summary-row.total .amount {
+            color: var(--primary);
+        }
+
+        .cart-summary .summary-row .label {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-1);
+        }
+
+        .cart-summary .summary-row .label i {
+            color: var(--gold);
+            font-size: var(--text-sm);
+        }
+
+        .cart-summary .coupon-section {
+            margin: var(--spacing-4) 0;
+            display: flex;
+            gap: var(--spacing-2);
+        }
+
+        .cart-summary .coupon-section input {
+            flex: 1;
+            padding: var(--spacing-2) var(--spacing-3);
+            border: 2px solid var(--gray-200);
+            border-radius: var(--radius-base);
+            font-size: var(--text-sm);
+            transition: var(--transition-base);
+        }
+
+        .cart-summary .coupon-section input:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+
+        .cart-summary .coupon-section .btn {
+            padding: var(--spacing-2) var(--spacing-4);
+            font-size: var(--text-sm);
+            min-height: 40px;
+            white-space: nowrap;
+        }
+
+        .cart-summary .btn-whatsapp {
+            width: 100%;
+            padding: var(--spacing-3);
+            background: #25d366;
+            color: var(--white);
+            border: none;
+            border-radius: var(--radius-base);
+            font-size: var(--text-base);
+            font-weight: var(--font-semibold);
+            cursor: pointer;
+            transition: var(--transition-base);
+            margin-top: var(--spacing-3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-2);
+            min-height: 52px;
+        }
+
+        .cart-summary .btn-whatsapp:hover {
+            background: #1da851;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(37, 211, 102, 0.3);
+        }
+
+        .cart-summary .btn-contact {
+            width: 100%;
+            padding: var(--spacing-3);
+            background: var(--primary);
+            color: var(--white);
+            border: none;
+            border-radius: var(--radius-base);
+            font-size: var(--text-base);
+            font-weight: var(--font-semibold);
+            cursor: pointer;
+            transition: var(--transition-base);
+            margin-top: var(--spacing-2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-2);
+            min-height: 52px;
+        }
+
+        .cart-summary .btn-contact:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(15, 52, 96, 0.3);
+        }
+
+        /* Related Products */
+        .related-products {
+            margin-top: var(--spacing-12);
+        }
+
+        .related-products h3 {
+            font-size: var(--text-2xl);
+            font-weight: var(--font-bold);
+            margin-bottom: var(--spacing-4);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-2);
+        }
+
+        .related-products h3 i {
+            color: var(--gold);
+        }
+
+        .related-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: var(--spacing-4);
+        }
+
+        .related-item {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition-base);
+            cursor: pointer;
+        }
+
+        .related-item:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .related-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .related-item .info {
+            padding: var(--spacing-3);
+        }
+
+        .related-item .info .name {
+            font-weight: var(--font-semibold);
+            font-size: var(--text-sm);
+            margin-bottom: var(--spacing-1);
+        }
+
+        .related-item .info .price {
+            color: var(--primary);
+            font-weight: var(--font-bold);
+        }
+
+        .related-item .info .btn {
+            width: 100%;
+            margin-top: var(--spacing-2);
+            padding: var(--spacing-1) var(--spacing-2);
+            font-size: var(--text-sm);
+            min-height: 32px;
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            padding: 15px 25px;
+            border-radius: 10px;
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.2);
+            z-index: 2000;
+            transform: translateX(400px);
+            transition: transform 0.5s ease;
+            max-width: 400px;
+            font-size: var(--text-sm);
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast.success {
+            background: #28a745;
+        }
+
+        .toast.error {
+            background: #dc3545;
+        }
+
+        .toast.info {
+            background: #17a2b8;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .cart-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .cart-summary {
+                position: relative;
+                top: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .cart-items-container .cart-header {
+                display: none;
+            }
+
+            .cart-item {
+                grid-template-columns: 1fr;
+                gap: var(--spacing-3);
+                padding: var(--spacing-3);
+                border-bottom: 2px solid var(--gray-200);
+                position: relative;
+            }
+
+            .cart-item .product-info {
+                flex-direction: column;
+                align-items: flex-start;
+                text-align: left;
+            }
+
+            .cart-item .product-info .product-image {
+                width: 100%;
+                height: 200px;
+            }
+
+            .cart-item .product-price,
+            .cart-item .quantity-control,
+            .cart-item .item-total {
+                justify-self: start;
+                width: 100%;
+            }
+
+            .cart-item .quantity-control {
+                justify-content: flex-start;
+            }
+
+            .cart-item .remove-btn {
+                position: absolute;
+                top: var(--spacing-2);
+                right: var(--spacing-2);
+            }
+
+            .related-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+        }
+
+        @media (max-width: 480px) {
+            .cart-page .page-header h1 {
+                font-size: var(--text-2xl);
+            }
+
+            .cart-summary .coupon-section {
+                flex-direction: column;
+            }
+
+            .cart-summary .coupon-section .btn {
+                width: 100%;
+            }
+        }
+
+        /* Dark Mode */
+        .dark-mode .cart-items-container,
+        .dark-mode .cart-summary,
+        .dark-mode .related-item {
+            background: #1a1a2e;
+            color: var(--white);
+        }
+
+        .dark-mode .cart-items-container .cart-header {
+            background: #22223a;
+            color: var(--gray-400);
+        }
+
+        .dark-mode .cart-item {
+            border-bottom-color: #333;
+        }
+
+        .dark-mode .cart-item:hover {
+            background: #22223a;
+        }
+
+        .dark-mode .cart-item .product-info .product-details .product-name {
+            color: var(--white);
+        }
+
+        .dark-mode .cart-item .product-price {
+            color: var(--white);
+        }
+
+        .dark-mode .cart-item .quantity-control button {
+            background: #22223a;
+            border-color: #444;
+            color: var(--white);
+        }
+
+        .dark-mode .cart-item .quantity-control button:hover {
+            background: var(--gold);
+            color: #1a1a2e;
+        }
+
+        .dark-mode .cart-summary .summary-row {
+            color: var(--gray-400);
+        }
+
+        .dark-mode .cart-summary .summary-row.total {
+            color: var(--white);
+        }
+
+        .dark-mode .cart-summary .coupon-section input {
+            background: #22223a;
+            border-color: #444;
+            color: var(--white);
+        }
+
+        .dark-mode .empty-cart .empty-icon {
+            color: #444;
+        }
+
+        .dark-mode .empty-cart h3 {
+            color: var(--white);
+        }
+
+        .dark-mode .empty-cart p {
+            color: var(--gray-400);
+        }
+
+        .dark-mode .related-item .info .name {
+            color: var(--white);
+        }
+
+        /* Animations */
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .cart-item {
+            animation: slideIn 0.3s ease forwards;
+        }
+
+        .cart-item:nth-child(1) { animation-delay: 0.05s; }
+        .cart-item:nth-child(2) { animation-delay: 0.10s; }
+        .cart-item:nth-child(3) { animation-delay: 0.15s; }
+        .cart-item:nth-child(4) { animation-delay: 0.20s; }
+        .cart-item:nth-child(5) { animation-delay: 0.25s; }
+        .cart-item:nth-child(6) { animation-delay: 0.30s; }
+        .cart-item:nth-child(7) { animation-delay: 0.35s; }
+        .cart-item:nth-child(8) { animation-delay: 0.40s; }
+        .cart-item:nth-child(9) { animation-delay: 0.45s; }
+        .cart-item:nth-child(10) { animation-delay: 0.50s; }
+
+        /* Coupon Applied */
+        .coupon-applied {
+            background: var(--success-light);
+            border: 1px solid var(--success);
+            color: #155724;
+            padding: var(--spacing-2) var(--spacing-3);
+            border-radius: var(--radius-base);
+            font-size: var(--text-sm);
+            display: none;
+            align-items: center;
+            gap: var(--spacing-2);
+            margin-top: var(--spacing-2);
+        }
+
+        .coupon-applied.visible {
+            display: flex;
+        }
+
+        .coupon-applied .remove-coupon {
+            background: none;
+            border: none;
+            color: var(--error);
+            cursor: pointer;
+            font-weight: var(--font-bold);
+            margin-left: auto;
+        }
+
+        /* WhatsApp Section Info */
+        .whatsapp-info {
+            margin-top: var(--spacing-3);
+            padding: var(--spacing-3);
+            background: rgba(37, 211, 102, 0.08);
+            border-radius: var(--radius-base);
+            border: 1px solid rgba(37, 211, 102, 0.2);
+            font-size: var(--text-sm);
+            color: var(--gray-600);
+            text-align: center;
+        }
+
+        .whatsapp-info i {
+            color: #25d366;
+        }
+
+        .dark-mode .whatsapp-info {
+            background: rgba(37, 211, 102, 0.05);
+            color: var(--gray-400);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-container">
+                <div class="logo">
+                    <h2>EFYA PAPABI</h2>
+                    <span>COLLECTIONS</span>
+                </div>
+                <div class="nav-links">
+                    <a href="index.html">Home</a>
+                    <a href="shop.html">Shop</a>
+                    <a href="about.html">About</a>
+                    <a href="contact.html">Contact</a>
+                    <a href="cart.html" class="active cart-link">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-count" id="navCartCount">0</span>
+                    </a>
+                    <a href="admin.html"><i class="fas fa-user-cog"></i></a>
+                </div>
+                <div class="hamburger" onclick="toggleMobileMenu()">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Cart Page -->
+    <section class="cart-page">
+        <div class="container">
+            <!-- Page Header -->
+            <div class="page-header">
+                <h1>
+                    <i class="fas fa-shopping-cart"></i>
+                    Your Shopping Cart
+                </h1>
+                <p class="subtitle" id="cartSubtitle">Review your items before placing order</p>
+            </div>
+
+            <!-- Cart Layout -->
+            <div class="cart-layout">
+                <!-- Cart Items -->
+                <div class="cart-items-container" id="cartItemsContainer">
+                    <div class="cart-header">
+                        <span>Product</span>
+                        <span>Price</span>
+                        <span>Quantity</span>
+                        <span>Total</span>
+                    </div>
+                    <div id="cartItems">
+                        <!-- Rendered from JS -->
+                    </div>
+                </div>
+
+                <!-- Cart Summary -->
+                <div class="cart-summary" id="cartSummary">
+                    <h3><i class="fas fa-receipt"></i> Order Summary</h3>
+                    
+                    <div id="summaryContent">
+                        <!-- Rendered from JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Related Products -->
+            <div class="related-products" id="relatedProducts">
+                <h3><i class="fas fa-heart"></i> You May Also Like</h3>
+                <div class="related-grid" id="relatedGrid">
+                    <!-- Rendered from JS -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer style="background: var(--gray-900); color: var(--gray-400); padding: var(--spacing-8) 0 var(--spacing-4);">
+        <div class="container">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--spacing-6);">
+                <div>
+                    <h4 style="color: var(--white); margin-bottom: var(--spacing-3);">EFYA PAPABI</h4>
+                    <p style="font-size: var(--text-sm);">Premium fashion for the modern Ghanaian. Quality, style, and comfort.</p>
+                </div>
+                <div>
+                    <h4 style="color: var(--white); margin-bottom: var(--spacing-3);">Quick Links</h4>
+                    <ul style="list-style: none; line-height: 2;">
+                        <li><a href="shop.html" style="color: var(--gray-400);">Shop</a></li>
+                        <li><a href="about.html" style="color: var(--gray-400);">About Us</a></li>
+                        <li><a href="contact.html" style="color: var(--gray-400);">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 style="color: var(--white); margin-bottom: var(--spacing-3);">Contact Info</h4>
+                    <ul style="list-style: none; line-height: 2; color: var(--gray-400); font-size: var(--text-sm);">
+                        <li><i class="fas fa-map-marker-alt" style="color: var(--gold);"></i> Accra - Madina</li>
+                        <li><i class="fas fa-phone" style="color: var(--gold);"></i> 0544527889</li>
+                        <li><i class="fas fa-envelope" style="color: var(--gold);"></i> info@efyapapabi.com</li>
+                    </ul>
+                </div>
+            </div>
+            <div style="text-align: center; margin-top: var(--spacing-6); padding-top: var(--spacing-4); border-top: 1px solid rgba(255,255,255,0.05); font-size: var(--text-sm); color: var(--gray-600);">
+                <p>&copy; 2026 EFYA PAPABI COLLECTIONS. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- WhatsApp Float Button -->
+    <a href="https://wa.me/233544527889" target="_blank" class="whatsapp-float">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <script>
+        // ============================================
+        // CART FUNCTIONALITY
+        // ============================================
+
+        // Get cart from localStorage
+        function getCart() {
+            const stored = localStorage.getItem('efya_cart');
+            if (stored) {
+                try {
+                    return JSON.parse(stored);
+                } catch (e) {
+                    console.error('Error parsing cart:', e);
+                }
+            }
+            return [];
+        }
+
+        // Save cart to localStorage
+        function saveCart(cart) {
+            localStorage.setItem('efya_cart', JSON.stringify(cart));
+            updateCartCount();
+        }
+
+        // Get products
+        function getProducts() {
+            const stored = localStorage.getItem('efya_products');
+            if (stored) {
+                try {
+                    return JSON.parse(stored);
+                } catch (e) {
+                    console.error('Error parsing products:', e);
+                }
+            }
+            // Default products
+            const defaults = [
+                {
+                    id: 'prod-1',
+                    name: 'Classic Leather Shoes',
+                    code: 'EPC-SHO-001',
+                    category: 'shoes',
+                    price: 150,
+                    stock: 25,
+                    description: 'Premium leather shoes perfect for any occasion.',
+                    image: 'https://via.placeholder.com/300x300/0f3460/ffffff?text=Shoes',
+                    sizes: ['38', '39', '40', '41', '42', '43'],
+                    colors: ['Black', 'Brown', 'Tan']
+                },
+                {
+                    id: 'prod-2',
+                    name: 'Designer Handbag',
+                    code: 'EPC-BAG-001',
+                    category: 'bags',
+                    price: 250,
+                    stock: 15,
+                    description: 'Elegant handbag made from premium materials.',
+                    image: 'https://via.placeholder.com/300x300/0f3460/ffffff?text=Handbag',
+                    sizes: ['One Size'],
+                    colors: ['Black', 'Gold', 'Red']
+                },
+                {
+                    id: 'prod-3',
+                    name: 'Elegant Evening Dress',
+                    code: 'EPC-DRS-001',
+                    category: 'dresses',
+                    price: 180,
+                    stock: 10,
+                    description: 'Stunning evening dress perfect for special occasions.',
+                    image: 'https://via.placeholder.com/300x300/0f3460/ffffff?text=Dress',
+                    sizes: ['S', 'M', 'L', 'XL'],
+                    colors: ['Red', 'Black', 'Navy']
+                }
+            ];
+            localStorage.setItem('efya_products', JSON.stringify(defaults));
+            return defaults;
+        }
+
+        // Update cart count badge
+        function updateCartCount() {
+            const cart = getCart();
+            const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+            document.querySelectorAll('.cart-count').forEach(el => {
+                el.textContent = count;
+            });
+        }
+
+        // Render cart items
+        function renderCart() {
+            const cart = getCart();
+            const products = getProducts();
+            const container = document.getElementById('cartItems');
+            const summaryContainer = document.getElementById('summaryContent');
+            const subtitle = document.getElementById('cartSubtitle');
+
+            if (cart.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-cart">
+                        <div class="empty-icon">
+                            <i class="fas fa-shopping-bag"></i>
+                        </div>
+                        <h3>Your Cart is Empty</h3>
+                        <p>Looks like you haven't added any items to your cart yet.</p>
+                        <a href="shop.html" class="btn btn-gold">
+                            <i class="fas fa-store"></i> Start Shopping
+                        </a>
+                    </div>
+                `;
+                summaryContainer.innerHTML = `
+                    <div style="text-align: center; padding: var(--spacing-4) 0; color: var(--gray-500);">
+                        <i class="fas fa-receipt" style="font-size: 2rem; display: block; margin-bottom: var(--spacing-2);"></i>
+                        <p>Your cart is empty</p>
+                        <a href="shop.html" class="btn btn-sm" style="margin-top: var(--spacing-2);">Shop Now</a>
+                    </div>
+                `;
+                subtitle.textContent = 'Your cart is empty. Start shopping!';
+                document.getElementById('relatedProducts').style.display = 'block';
+                loadRelatedProducts();
+                return;
+            }
+
+            subtitle.textContent = `You have ${cart.length} item(s) in your cart`;
+
+            // Render cart items
+            let itemsHtml = '';
+            let subtotal = 0;
+            let totalItems = 0;
+
+            cart.forEach((item, index) => {
+                const product = products.find(p => p.id === item.id);
+                if (!product) return;
+
+                const itemTotal = product.price * item.quantity;
+                subtotal += itemTotal;
+                totalItems += item.quantity;
+
+                itemsHtml += `
+                    <div class="cart-item" data-index="${index}">
+                        <div class="product-info">
+                            <img src="${product.image || 'https://via.placeholder.com/80x80/0f3460/ffffff?text=' + product.name}" 
+                                 alt="${product.name}" 
+                                 class="product-image"
+                                 onerror="this.src='https://via.placeholder.com/80x80/0f3460/ffffff?text=No+Img'" />
+                            <div class="product-details">
+                                <div class="product-name">${product.name}</div>
+                                <div class="product-code">${product.code}</div>
+                                <div class="product-variants">
+                                    ${item.size ? `<span><i class="fas fa-ruler"></i> ${item.size}</span>` : ''}
+                                    ${item.color ? `<span><i class="fas fa-palette"></i> ${item.color}</span>` : ''}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="product-price">GH₵${product.price}</div>
+                        <div class="quantity-control">
+                            <button onclick="updateQuantity('${item.id}', -1, '${item.size || ''}', '${item.color || ''}')" 
+                                    ${item.quantity <= 1 ? 'disabled' : ''}>
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <span class="quantity">${item.quantity}</span>
+                            <button onclick="updateQuantity('${item.id}', 1, '${item.size || ''}', '${item.color || ''}')">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                        <div class="item-total">GH₵${itemTotal}</div>
+                        <button class="remove-btn" onclick="removeFromCart('${item.id}', '${item.size || ''}', '${item.color || ''}')" title="Remove item">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = itemsHtml;
+
+            // Render summary
+            const deliveryFee = subtotal > 0 ? 20 : 0;
+            const total = subtotal + deliveryFee;
+
+            summaryContainer.innerHTML = `
+                <div class="summary-row">
+                    <span class="label"><i class="fas fa-box"></i> Subtotal</span>
+                    <span>GH₵${subtotal}</span>
+                </div>
+                <div class="summary-row">
+                    <span class="label"><i class="fas fa-truck"></i> Delivery Fee</span>
+                    <span>GH₵${deliveryFee}</span>
+                </div>
+                <div class="summary-row">
+                    <span class="label"><i class="fas fa-shopping-bag"></i> Items</span>
+                    <span>${totalItems}</span>
+                </div>
+                
+                <div class="coupon-section">
+                    <input type="text" id="couponInput" placeholder="Enter coupon code" />
+                    <button class="btn btn-sm" onclick="applyCoupon()">Apply</button>
+                </div>
+                <div class="coupon-applied" id="couponApplied">
+                    <i class="fas fa-check-circle"></i>
+                    <span id="couponMessage">Coupon applied!</span>
+                    <button class="remove-coupon" onclick="removeCoupon()">✕</button>
+                </div>
+                
+                <div class="summary-row total">
+                    <span>Total</span>
+                    <span class="amount">GH₵${total}</span>
+                </div>
+                
+                <button class="btn-whatsapp" onclick="sendCartToWhatsApp()">
+                    <i class="fab fa-whatsapp"></i> Send Details to Seller
+                </button>
+                
+                <button class="btn-contact" onclick="contactSeller()">
+                    <i class="fas fa-phone"></i> Contact Seller
+                </button>
+
+                <div class="whatsapp-info">
+                    <i class="fas fa-info-circle"></i> 
+                    Your order will be sent directly to our WhatsApp for processing.
+                    <br><small>We'll respond within 15 minutes.</small>
+                </div>
+            `;
+
+            // Load related products
+            loadRelatedProducts();
+        }
+
+        // ============================================
+        // CART OPERATIONS
+        // ============================================
+
+        function updateQuantity(productId, delta, size = '', color = '') {
+            let cart = getCart();
+            const item = cart.find(i => 
+                i.id === productId && 
+                i.size === size && 
+                i.color === color
+            );
+            
+            if (item) {
+                const newQty = item.quantity + delta;
+                if (newQty <= 0) {
+                    removeFromCart(productId, size, color);
+                    return;
+                }
+                
+                // Check stock
+                const products = getProducts();
+                const product = products.find(p => p.id === productId);
+                if (product && newQty > product.stock) {
+                    showToast('Not enough stock available!', 'error');
+                    return;
+                }
+                
+                item.quantity = newQty;
+                saveCart(cart);
+                renderCart();
+                updateCartCount();
+                showToast('Quantity updated!', 'success');
+            }
+        }
+
+        function removeFromCart(productId, size = '', color = '') {
+            let cart = getCart();
+            if (size || color) {
+                cart = cart.filter(i => 
+                    !(i.id === productId && i.size === size && i.color === color)
+                );
+            } else {
+                cart = cart.filter(i => i.id !== productId);
+            }
+            saveCart(cart);
+            renderCart();
+            updateCartCount();
+            showToast('Item removed from cart', 'success');
+        }
+
+        function clearCart() {
+            if (confirm('Are you sure you want to clear your cart?')) {
+                saveCart([]);
+                renderCart();
+                updateCartCount();
+                showToast('Cart cleared!', 'success');
+            }
+        }
+
+        // ============================================
+        // COUPON FUNCTIONALITY
+        // ============================================
+
+        let activeCoupon = null;
+
+        function applyCoupon() {
+            const input = document.getElementById('couponInput');
+            const code = input.value.trim().toUpperCase();
+            
+            if (!code) {
+                showToast('Please enter a coupon code', 'error');
+                return;
+            }
+
+            // Mock coupons
+            const coupons = {
+                'EFYA10': { discount: 0.10, message: '10% off applied!' },
+                'EFYA20': { discount: 0.20, message: '20% off applied!' },
+                'EFYA30': { discount: 0.30, message: '30% off applied!' },
+                'FREESHIP': { discount: 0, message: 'Free shipping applied!', freeShipping: true }
+            };
+
+            if (coupons[code]) {
+                activeCoupon = {
+                    code: code,
+                    ...coupons[code]
+                };
+                
+                document.getElementById('couponApplied').classList.add('visible');
+                document.getElementById('couponMessage').textContent = coupons[code].message;
+                document.getElementById('couponInput').value = '';
+                
+                showToast('Coupon applied successfully!', 'success');
+                updateSummaryWithCoupon();
+            } else {
+                showToast('Invalid coupon code', 'error');
+            }
+        }
+
+        function removeCoupon() {
+            activeCoupon = null;
+            document.getElementById('couponApplied').classList.remove('visible');
+            showToast('Coupon removed', 'info');
+            updateSummaryWithCoupon();
+        }
+
+        function updateSummaryWithCoupon() {
+            const cart = getCart();
+            const products = getProducts();
+            let subtotal = 0;
+            
+            cart.forEach(item => {
+                const product = products.find(p => p.id === item.id);
+                if (product) {
+                    subtotal += product.price * item.quantity;
+                }
+            });
+            
+            let discount = 0;
+            let deliveryFee = 20;
+            
+            if (activeCoupon) {
+                if (activeCoupon.freeShipping) {
+                    deliveryFee = 0;
+                }
+                if (activeCoupon.discount) {
+                    discount = subtotal * activeCoupon.discount;
+                }
+            }
+            
+            const total = subtotal - discount + deliveryFee;
+            
+            // Update the summary display
+            const summaryContainer = document.getElementById('summaryContent');
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            
+            summaryContainer.innerHTML = `
+                <div class="summary-row">
+                    <span class="label"><i class="fas fa-box"></i> Subtotal</span>
+                    <span>GH₵${subtotal}</span>
+                </div>
+                ${activeCoupon && activeCoupon.discount ? `
+                    <div class="summary-row" style="color: var(--success);">
+                        <span class="label"><i class="fas fa-tag"></i> Discount (${activeCoupon.code})</span>
+                        <span>-GH₵${discount}</span>
+                    </div>
+                ` : ''}
+                <div class="summary-row">
+                    <span class="label"><i class="fas fa-truck"></i> Delivery Fee</span>
+                    <span>${deliveryFee === 0 ? 'FREE' : 'GH₵' + deliveryFee}</span>
+                </div>
+                <div class="summary-row">
+                    <span class="label"><i class="fas fa-shopping-bag"></i> Items</span>
+                    <span>${totalItems}</span>
+                </div>
+                <div class="summary-row total">
+                    <span>Total</span>
+                    <span class="amount">GH₵${total}</span>
+                </div>
+                <button class="btn-whatsapp" onclick="sendCartToWhatsApp()">
+                    <i class="fab fa-whatsapp"></i> Send Details to Seller
+                </button>
+                <button class="btn-contact" onclick="contactSeller()">
+                    <i class="fas fa-phone"></i> Contact Seller
+                </button>
+                <div class="whatsapp-info">
+                    <i class="fas fa-info-circle"></i> 
+                    Your order will be sent directly to our WhatsApp for processing.
+                    <br><small>We'll respond within 15 minutes.</small>
+                </div>
+            `;
+        }
+
+        // ============================================
+        // CONTACT & WHATSAPP
+        // ============================================
+
+        function contactSeller() {
+            window.location.href = 'contact.html';
+        }
+
+        function sendCartToWhatsApp() {
+            const cart = getCart();
+            if (cart.length === 0) {
+                showToast('Your cart is empty!', 'error');
+                return;
+            }
+
+            const products = getProducts();
+            let message = '🛍️ EFYA PAPABI COLLECTIONS ORDER\n\n';
+            
+            // Generate order number
+            const date = new Date();
+            const orderNumber = `EFYA${date.getFullYear()}${String(date.getMonth() + 1).padStart(2, '0')}${String(date.getDate()).padStart(2, '0')}${String(Math.floor(Math.random() * 10000)).padStart(4, '0')}`;
+            
+            message += `📋 Order Number: ${orderNumber}\n`;
+            message += `📅 Date: ${date.toLocaleString()}\n\n`;
+            message += '━═━═━═━═━═━═━═━\n\n';
+            message += '🛒 ITEMS ORDERED:\n\n';
+            
+            let total = 0;
+            cart.forEach((item, index) => {
+                const product = products.find(p => p.id === item.id);
+                if (product) {
+                    const itemTotal = product.price * item.quantity;
+                    total += itemTotal;
+                    message += `${index + 1}. ${product.name}\n`;
+                    message += `   📦 Code: ${product.code}\n`;
+                    message += `   🔢 Qty: ${item.quantity}\n`;
+                    message += `   💰 Price: GH₵${product.price}\n`;
+                    if (item.size) message += `   📐 Size: ${item.size}\n`;
+                    if (item.color) message += `   🎨 Color: ${item.color}\n`;
+                    message += `   ────────────────\n\n`;
+                }
+            });
+            
+            const deliveryFee = 20;
+            const grandTotal = total + deliveryFee;
+            
+            message += '━═━═━═━═━═━═━═━\n\n';
+            message += `💰 Subtotal: GH₵${total}\n`;
+            message += `🚚 Delivery Fee: GH₵${deliveryFee}\n`;
+            message += `💳 TOTAL: GH₵${grandTotal}\n\n`;
+            message += '━═━═━═━═━═━═━═━\n\n';
+            message += '✅ Thank you for shopping with EFYA PAPABI COLLECTIONS!\n';
+            message += '📞 For inquiries, call us on 0544527889\n';
+            message += '📍 Accra - Madina, Ghana\n';
+            message += '🌐 www.efyapapabi.com';
+
+            const encoded = encodeURIComponent(message);
+            window.open(`https://wa.me/233544527889?text=${encoded}`, '_blank');
+        }
+
+        // ============================================
+        // RELATED PRODUCTS
+        // ============================================
+
+        function loadRelatedProducts() {
+            const cart = getCart();
+            const products = getProducts();
+            const container = document.getElementById('relatedGrid');
+            
+            // Get categories from cart items
+            const cartCategories = cart.map(item => {
+                const product = products.find(p => p.id === item.id);
+                return product ? product.category : null;
+            }).filter(c => c !== null);
+            
+            // Get unique categories
+            const uniqueCategories = [...new Set(cartCategories)];
+            
+            // Find related products
+            let related = [];
+            if (uniqueCategories.length > 0) {
+                related = products.filter(p => 
+                    uniqueCategories.includes(p.category) && 
+                    !cart.some(item => item.id === p.id)
+                );
+            }
+            
+            // If not enough related, add random products
+            if (related.length < 4) {
+                const moreProducts = products.filter(p => 
+                    !cart.some(item => item.id === p.id) && 
+                    !related.some(r => r.id === p.id)
+                );
+                related = [...related, ...moreProducts];
+            }
+            
+            // Limit to 8 products
+            related = related.slice(0, 8);
+            
+            if (related.length === 0) {
+                container.innerHTML = '<p style="color: var(--gray-500); text-align: center; padding: var(--spacing-4);">No related products found</p>';
+                return;
+            }
+            
+            container.innerHTML = related.map(p => `
+                <div class="related-item" onclick="window.location.href='product.html?id=${p.id}'">
+                    <img src="${p.image || 'https://via.placeholder.com/200x200/0f3460/ffffff?text=' + p.name}" 
+                         alt="${p.name}"
+                         onerror="this.src='https://via.placeholder.com/200x200/0f3460/ffffff?text=No+Img'" />
+                    <div class="info">
+                        <div class="name">${p.name}</div>
+                        <div class="price">GH₵${p.price}</div>
+                        <button class="btn btn-sm btn-gold" onclick="event.stopPropagation(); addToCart('${p.id}')">
+                            <i class="fas fa-cart-plus"></i> Add to Cart
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function addToCart(productId) {
+            let cart = getCart();
+            const existing = cart.find(item => item.id === productId);
+            
+            if (existing) {
+                existing.quantity += 1;
+            } else {
+                cart.push({ id: productId, quantity: 1, size: 'M', color: 'Black' });
+            }
+            
+            saveCart(cart);
+            renderCart();
+            updateCartCount();
+            showToast('Added to cart!', 'success');
+        }
+
+        // ============================================
+        // TOAST NOTIFICATIONS
+        // ============================================
+
+        function showToast(message, type = 'success') {
+            const existing = document.querySelector('.toast');
+            if (existing) existing.remove();
+            
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => toast.classList.add('show'), 100);
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 500);
+            }, 3000);
+        }
+
+        // ============================================
+        // MOBILE MENU TOGGLE
+        // ============================================
+
+        function toggleMobileMenu() {
+            document.querySelector('.nav-links').classList.toggle('active');
+        }
+
+        // ============================================
+        // INITIALIZATION
+        // ============================================
+
+        document.addEventListener('DOMContentLoaded', function() {
+            renderCart();
+            updateCartCount();
+        });
+
+        // Expose functions globally
+        window.updateQuantity = updateQuantity;
+        window.removeFromCart = removeFromCart;
+        window.clearCart = clearCart;
+        window.applyCoupon = applyCoupon;
+        window.removeCoupon = removeCoupon;
+        window.contactSeller = contactSeller;
+        window.sendCartToWhatsApp = sendCartToWhatsApp;
+        window.addToCart = addToCart;
+        window.toggleMobileMenu = toggleMobileMenu;
+        window.showToast = showToast;
+    </script>
+</body>
+</html>
